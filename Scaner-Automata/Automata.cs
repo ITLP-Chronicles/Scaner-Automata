@@ -1,72 +1,30 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing.Drawing2D;
+using System.Text;
 
 namespace Scaner_Automata
 {
-    public enum Token
-    {
-        Delimitadores = 50,
-        Operadores = 70,
-        CadenaVacia = 99,
-        Identificador = 100,
-        SignoDolar = 199,
-        Constante = 200,
-        Regla = 300
-    }
-
-    public enum TipoChar
-    {
-        Letra,
-        Digito,
-        Delimitador,
-        Operador,
-        Exponencial,
-        EspacioBlanco,
-        PuntoFlotante,
-        Desconocido
-    }
-
-    public record RegistroLexico
-    {
-        public int LineaNum;
-        public string Token = "";
-        public int Tipo;
-        public int Codigo;
-    }
-
-    public record RegistroDinamico
-    {
-        public string IdentificadorTexto = "";
-        public int Valor;
-        public List<int> LineasEnDondeAparece;
-    }
-
-    public record RegistroConstante
-    {
-        public string ConstanteTexto = "";
-        public int Valor;
-        public int LineaEnDondeAparece;
-    }
-
-    public record AutomataResult
-    {
-        public List<RegistroLexico> RegistrosLexicos = new();
-        public List<RegistroDinamico> RegistrosDinamicos = new();
-        public List<RegistroConstante> RegistrosConstantes = new();
-    }
-
+  
     internal class Automata
     {
+        private int valorDeConstantes = 200;
+        private int valorDeDinamicos = 100;
+
         private int[,] tablaTransiciones;
+
+        private TipoChar tipoCharActual;
         private int estadoActual;
 
+        // Conjuntos y diccionarios
+        private (char, int) SignoDolar = ('$', 199);
+        private (char, int) CadenaVacia = (' ', 99);
         private Dictionary<char, int> Delimitadores = new Dictionary<char, int>()
         {
             { '(', 50 },
             { ')', 51 },
             {  ';', 52 }
         };
-
         private Dictionary<char, int> Operadores = new Dictionary<char, int>()
         {
             { '(', 70 },
@@ -74,10 +32,23 @@ namespace Scaner_Automata
             {  '*', 72 },
             {  '/', 73 }
         };
+        private Dictionary<int, string> ErroresDisponibles = new()
+        {
+            {100, "Sin errores"},
+            {101, "Símbolo desconocido" },
+            {102, "Elemento Inválido" }
+        };
+        private Dictionary<Token, int> Tipos = new()
+        {
+            {Token.Delimitadores, 5 },
+            {Token.Operadores,  7},
+            {Token.CadenaVacia, 2 },
+            {Token.Identificador, 1 },
+            {Token.SignoDolar, 4 },
+            {Token.Constante, 3 },
+            {Token.Regla, 6 }
+        };
 
-        private (char, int) SignoDolar = ('$', 199);
-        private (char, int) CadenaVacia = (' ', 99);
-        // Private Reglas?
 
         public Automata()
         {
@@ -96,7 +67,7 @@ namespace Scaner_Automata
                 {5, 9, 3, 4, 7, 0, 5, 6 },
                 {5, 10, 3, 4, 5, 0, 5, 9 }
             };
-
+            this.tipoCharActual = TipoChar.EspacioBlanco; //TipoChar por defecto
         }
 
         private TipoChar CategorizarCaracter(char c)
@@ -113,26 +84,125 @@ namespace Scaner_Automata
             return TipoChar.Desconocido;
         }
 
+        private bool elEstadoEsValido(int state)
+        {
+            int[] valids = { 1, 2, 3, 4, 8, 9, 10};
+            return valids.Contains(state);
+        }
+
         public AutomataResult EscanearTexto(string allText)
         {
-            AutomataResult toReturn = new();
-            toReturn.RegistrosDinamicos = new List<RegistroDinamico>();
-            string[] lines = allText.Split('\n');
+            //Reiniciando el automata
             this.estadoActual = 0;
+            this.valorDeDinamicos = 100;
+            this.valorDeConstantes = 200;
+            var toReturn = new AutomataResult();
 
-            foreach(string line in lines)
+            //Seteando los datos y buffers para realizar los cálculos
+            string[] lines = allText.Replace(" ", "").Split('\n'); //Es necesario considerar espacios en blanco?
+            var bufferIdentificador = new StringBuilder();
+            var bufferConstante = new StringBuilder();
+
+            //Realiza el análisis
+            for (int actualLineIndex = 0; actualLineIndex < lines.Length; actualLineIndex ++)
             {
-                foreach(char c in line)
+                foreach(char c in lines[actualLineIndex])
                 {
-                    TipoChar cToken = this.CategorizarCaracter(c);
-                    estadoActual = this.tablaTransiciones[estadoActual, (int)cToken];
+                    TipoChar tipoCharAnterior = tipoCharActual;
+                    int estadoAnterior = estadoActual;
+                    tipoCharActual = this.CategorizarCaracter(c);
+                    estadoActual = this.tablaTransiciones[estadoActual, (int)tipoCharActual];
 
-                    if (cToken == TipoChar.EspacioBlanco)
+
+                    /// TiposChars (Separación): Lógica de separación de tokens usando delimitadores y operadores
+                    if (tipoCharActual == TipoChar.Delimitador)
                     {
-                        
-                    } 
+                        toReturn.RegistrosLexicos.Add(new RegistroLexico
+                        {
+                            LineaNum = actualLineIndex + 1,
+                            Codigo = this.Delimitadores[c],
+                            Token = c.ToString(),
+                            Tipo = this.Tipos[Token.Delimitadores]
+                        });
+
+                        //TODO
+                        continue;
+                    }
+
+                    if (tipoCharActual == TipoChar.Operador)
+                    {
+                        toReturn.RegistrosLexicos.Add(new RegistroLexico
+                        {
+                            LineaNum = actualLineIndex + 1,
+                            Codigo = this.Operadores[c],
+                            Token = c.ToString(),
+                            Tipo = this.Tipos[Token.Operadores]
+                        });
+
+                        //TODO
+                        continue;
+                    }
+
+                  
+
+                    // TiposChars (Independientes): Estos son los que por si sólos son válidos
+                    if (tipoCharActual == TipoChar.Letra)
+                        bufferIdentificador.Append(c);
+
+                    if (tipoCharActual == TipoChar.Digito)
+                    {
+                        ///Checa si el buffer identificador tiene chars dentro
+                        ///         (Significa que se está analizando un identificador actualmente)
+                        ///o de lo contrario significa que se está analizando una constante actualmente  
+                        /// ""Solo se usa un buffer a la vez""
+
+                        if (bufferIdentificador.ToString() != String.Empty)
+                            bufferIdentificador.Append(c);
+                        else
+                            bufferConstante.Append(c);
+                    }
+
+                    if (tipoCharActual == TipoChar.Exponencial) { }
+
+
+                            //que mafufada estoy haciendo help
+
                 }
             }
+
+            return toReturn;
         }
     }
 }
+
+
+
+   //if (sb.ToString() != String.Empty)
+   //                     {
+   //                         //Checar si no se encuentra ya este identificador
+   //                         RegistroDinamico? identificadorExistente =
+   //                             toReturn.RegistrosDinamicos.Find(rd => rd.IdentificadorTexto == sb.ToString());
+
+   //                         //Si? Agregar solamente la línea nueva
+   //                         if (identificadorExistente != null)
+   //                         {
+   //                             identificadorExistente.LineasEnDondeAparece.Add(actualLineIndex + 1);
+   //                         }
+   //                         //No? Crear un registro nuevo y la línea en la que se encuentra
+   //                         else
+   //                         {
+   //                             RegistroDinamico nuevoIdentificador = new RegistroDinamico
+   //                             {
+   //                                 IdentificadorTexto = sb.ToString(),
+   //                                 Valor = this.valorDeDinamicos++
+   //                             };
+   //                             nuevoIdentificador.LineasEnDondeAparece.Add(actualLineIndex + 1);
+   //                             toReturn.RegistrosDinamicos.Add(nuevoIdentificador);
+   //                         }
+
+   //                         //Limpia el cache de la palabra almacenada previa
+   //                         sb.Clear();
+   //                     }
+
+   //                     //Continua con la lógica normal de "Delimitador"
+

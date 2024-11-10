@@ -9,7 +9,7 @@ namespace Scaner_Automata
     internal class Automata
     {
         private int valorDeConstantes = 200;
-        private int valorDeDinamicos = 100;
+        private int valorDeIdentificadores = 100;
 
         private int[,] tablaTransiciones;
 
@@ -99,7 +99,7 @@ namespace Scaner_Automata
         {
             //Reinicia el automata
             this.estadoActual = 0;
-            this.valorDeDinamicos = 100;
+            this.valorDeIdentificadores = 100;
             this.valorDeConstantes = 200;
             this.bufferConstante.Clear();
             this.bufferIdentificador.Clear();
@@ -126,6 +126,77 @@ namespace Scaner_Automata
                     /// TiposChars (Separación): Lógica de separación de tokens usando delimitadores y operadores
                     if (tipoCharActual == TipoChar.Delimitador)
                     {
+                     
+                        if (elEstadoEsValido(estadoAnterior))
+                        {
+                            if (bufferConstante.ToString() != String.Empty)
+                            {
+                                ///El texto anterior al separador era una constante (Número) válido
+
+                                //Toca añadirlo en la tabla de constantes
+                                toReturn.RegistrosConstantes.Add(new RegistroConstante
+                                {
+                                    ConstanteTexto = bufferConstante.ToString(),
+                                    LineaEnDondeAparece = actualLineIndex + 1,
+                                    Valor = this.valorDeConstantes++
+                                });
+
+                                //Toca añadirlo a la tabla léxica en general también
+                                toReturn.RegistrosLexicos.Add(new RegistroLexico
+                                {
+                                    LineaNum = actualLineIndex + 1,
+                                    Codigo = this.valorDeConstantes++,
+                                    Tipo = this.Tipos[Token.Constante],
+                                    Token = bufferConstante.ToString()
+                                });
+
+                                ///Limpia como el "cache" de la palabra almacenada para dar cabida al siguiente
+                                bufferConstante.Clear();
+                            }
+                            else if (bufferIdentificador.ToString() != String.Empty)
+                            {
+                                ///El texto anterior al separador era un identificador válido
+                                ///
+                                ///Checar si no se encuentra ya este identificador
+                                RegistroDinamico? identificadorExistente =
+                                    toReturn.RegistrosDinamicos.Find(rd => rd.IdentificadorTexto == bufferIdentificador.ToString());
+
+                                //Si? Agregar solamente la línea nueva
+                                if (identificadorExistente != null)
+                                {
+                                    identificadorExistente.LineasEnDondeAparece.Add(actualLineIndex + 1);
+                                }
+                                //No? Crear un registro nuevo y la línea en la que se encuentra
+                                else
+                                {
+                                    //Toca añadirlo a la tabla de identificadores
+                                    RegistroDinamico nuevoIdentificador = new RegistroDinamico
+                                    {
+                                        IdentificadorTexto = bufferIdentificador.ToString(),
+                                        Valor = this.valorDeIdentificadores++
+                                    };
+                                    nuevoIdentificador.LineasEnDondeAparece.Add(actualLineIndex + 1);
+                                    toReturn.RegistrosDinamicos.Add(nuevoIdentificador);
+
+                                    //Toca añadirlo también en la tabla léxica general
+                                    toReturn.RegistrosLexicos.Add(new RegistroLexico
+                                    {
+                                        LineaNum = actualLineIndex + 1,
+                                        Codigo = this.valorDeIdentificadores++,
+                                        Tipo = this.Tipos[Token.Identificador],
+                                        Token = bufferIdentificador.ToString()
+                                    });
+                                }
+
+                                //Limpia el cache de la palabra almacenada previa
+                                bufferConstante.Clear();
+                            }
+
+                            //TODO Change this code to error handling
+                            bufferConstante.Clear();
+                            bufferIdentificador.Clear();
+                        }
+
                         toReturn.RegistrosLexicos.Add(new RegistroLexico
                         {
                             LineaNum = actualLineIndex + 1,
@@ -134,11 +205,17 @@ namespace Scaner_Automata
                             Tipo = this.Tipos[Token.Delimitadores]
                         });
 
+                    }
+
+                    if (tipoCharActual == TipoChar.Operador)
+                    {
                         if (elEstadoEsValido(estadoAnterior))
                         {
                             if (bufferConstante.ToString() != String.Empty)
                             {
                                 ///El texto anterior al separador era una constante (Número) válido
+
+                                //Toca añadirlo en la tabla de constantes
                                 toReturn.RegistrosConstantes.Add(new RegistroConstante
                                 {
                                     ConstanteTexto = bufferConstante.ToString(),
@@ -146,6 +223,14 @@ namespace Scaner_Automata
                                     Valor = this.valorDeConstantes++
                                 });
 
+                                //Toca añadirlo a la tabla léxica en general también
+                                toReturn.RegistrosLexicos.Add(new RegistroLexico
+                                {
+                                    LineaNum = actualLineIndex + 1,
+                                    Codigo = this.valorDeConstantes++,
+                                    Tipo = this.Tipos[Token.Constante],
+                                    Token = bufferConstante.ToString()
+                                });
 
                                 ///Limpia como el "cache" de la palabra almacenada para dar cabida al siguiente
                                 bufferConstante.Clear();
@@ -166,26 +251,34 @@ namespace Scaner_Automata
                                 //No? Crear un registro nuevo y la línea en la que se encuentra
                                 else
                                 {
+                                    //Toca añadirlo a la tabla de identificadores
                                     RegistroDinamico nuevoIdentificador = new RegistroDinamico
                                     {
                                         IdentificadorTexto = bufferIdentificador.ToString(),
-                                        Valor = this.valorDeDinamicos++
+                                        Valor = this.valorDeIdentificadores++
                                     };
                                     nuevoIdentificador.LineasEnDondeAparece.Add(actualLineIndex + 1);
                                     toReturn.RegistrosDinamicos.Add(nuevoIdentificador);
+
+                                    //Toca añadirlo también en la tabla léxica general
+                                    toReturn.RegistrosLexicos.Add(new RegistroLexico
+                                    {
+                                        LineaNum = actualLineIndex + 1,
+                                        Codigo = this.valorDeIdentificadores++,
+                                        Tipo = this.Tipos[Token.Identificador],
+                                        Token = bufferIdentificador.ToString()
+                                    });
                                 }
 
                                 //Limpia el cache de la palabra almacenada previa
                                 bufferConstante.Clear();
                             }
 
+                            //TODO Change this code to error handling
                             bufferConstante.Clear();
                             bufferIdentificador.Clear();
                         }
-                    }
 
-                    if (tipoCharActual == TipoChar.Operador)
-                    {
                         toReturn.RegistrosLexicos.Add(new RegistroLexico
                         {
                             LineaNum = actualLineIndex + 1,
@@ -193,55 +286,6 @@ namespace Scaner_Automata
                             Token = c.ToString(),
                             Tipo = this.Tipos[Token.Operadores]
                         });
-
-
-                        if (elEstadoEsValido(estadoAnterior))
-                        {
-                            if (bufferConstante.ToString() != String.Empty)
-                            {
-                                ///El texto anterior al separador era una constante (Número) válido
-                                toReturn.RegistrosConstantes.Add(new RegistroConstante
-                                {
-                                    ConstanteTexto = bufferConstante.ToString(),
-                                    LineaEnDondeAparece = actualLineIndex + 1,
-                                    Valor = this.valorDeConstantes++
-                                });
-
-                                ///Limpia como el "cache" de la palabra almacenada para dar cabida al siguiente
-                                bufferConstante.Clear();
-                            }
-                            else if (bufferIdentificador.ToString() != String.Empty)
-                            {
-                                ///El texto anterior al separador era un identificador válido
-                                ///
-                                ///Checar si no se encuentra ya este identificador
-                                RegistroDinamico? identificadorExistente =
-                                    toReturn.RegistrosDinamicos.Find(rd => rd.IdentificadorTexto == bufferIdentificador.ToString());
-
-                                //Si? Agregar solamente la línea nueva
-                                if (identificadorExistente != null)
-                                {
-                                    identificadorExistente.LineasEnDondeAparece.Add(actualLineIndex + 1);
-                                }
-                                //No? Crear un registro nuevo y la línea en la que se encuentra
-                                else
-                                {
-                                    RegistroDinamico nuevoIdentificador = new RegistroDinamico
-                                    {
-                                        IdentificadorTexto = bufferIdentificador.ToString(),
-                                        Valor = this.valorDeDinamicos++
-                                    };
-                                    nuevoIdentificador.LineasEnDondeAparece.Add(actualLineIndex + 1);
-                                    toReturn.RegistrosDinamicos.Add(nuevoIdentificador);
-                                }
-
-                                //Limpia el cache de la palabra almacenada previa
-                                bufferConstante.Clear();
-                            }
-                        }
-
-                         bufferConstante.Clear();
-                         bufferIdentificador.Clear();
 
                     }
 

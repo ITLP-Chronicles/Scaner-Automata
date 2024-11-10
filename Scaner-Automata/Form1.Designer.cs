@@ -55,10 +55,12 @@
             // 
             // txtTexto
             // 
-            txtTexto.Location = new Point(12, 37);
+            txtTexto.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtTexto.Location = new Point(10, 28);
+            txtTexto.Margin = new Padding(3, 2, 3, 2);
             txtTexto.Multiline = true;
             txtTexto.Name = "txtTexto";
-            txtTexto.Size = new Size(1177, 238);
+            txtTexto.Size = new Size(1030, 180);
             txtTexto.TabIndex = 0;
             // 
             // dgvLexica
@@ -67,11 +69,12 @@
             dgvLexica.AllowUserToDeleteRows = false;
             dgvLexica.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvLexica.Columns.AddRange(new DataGridViewColumn[] { num, linea, token, tipo, codigo });
-            dgvLexica.Location = new Point(12, 365);
+            dgvLexica.Location = new Point(10, 274);
+            dgvLexica.Margin = new Padding(3, 2, 3, 2);
             dgvLexica.Name = "dgvLexica";
             dgvLexica.ReadOnly = true;
             dgvLexica.RowHeadersWidth = 51;
-            dgvLexica.Size = new Size(658, 492);
+            dgvLexica.Size = new Size(576, 369);
             dgvLexica.TabIndex = 1;
             // 
             // num
@@ -118,9 +121,9 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label1.Location = new Point(12, 337);
+            label1.Location = new Point(10, 253);
             label1.Name = "label1";
-            label1.Size = new Size(120, 25);
+            label1.Size = new Size(96, 20);
             label1.TabIndex = 2;
             label1.Text = "Tabla léxica";
             // 
@@ -130,11 +133,12 @@
             dgvId.AllowUserToDeleteRows = false;
             dgvId.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvId.Columns.AddRange(new DataGridViewColumn[] { identificadores, valorTI, lineaTI });
-            dgvId.Location = new Point(713, 365);
+            dgvId.Location = new Point(624, 274);
+            dgvId.Margin = new Padding(3, 2, 3, 2);
             dgvId.Name = "dgvId";
             dgvId.ReadOnly = true;
             dgvId.RowHeadersWidth = 51;
-            dgvId.Size = new Size(476, 220);
+            dgvId.Size = new Size(416, 165);
             dgvId.TabIndex = 3;
             // 
             // identificadores
@@ -167,11 +171,12 @@
             dgvCons.AllowUserToDeleteRows = false;
             dgvCons.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvCons.Columns.AddRange(new DataGridViewColumn[] { constantes, valorTC, lineaTC });
-            dgvCons.Location = new Point(713, 637);
+            dgvCons.Location = new Point(624, 478);
+            dgvCons.Margin = new Padding(3, 2, 3, 2);
             dgvCons.Name = "dgvCons";
             dgvCons.ReadOnly = true;
             dgvCons.RowHeadersWidth = 51;
-            dgvCons.Size = new Size(476, 220);
+            dgvCons.Size = new Size(416, 165);
             dgvCons.TabIndex = 4;
             // 
             // constantes
@@ -202,9 +207,9 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label2.Location = new Point(713, 609);
+            label2.Location = new Point(624, 457);
             label2.Name = "label2";
-            label2.Size = new Size(198, 25);
+            label2.Size = new Size(159, 20);
             label2.TabIndex = 5;
             label2.Text = "Tabla de constantes";
             // 
@@ -212,9 +217,9 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label3.Location = new Point(713, 337);
+            label3.Location = new Point(624, 253);
             label3.Name = "label3";
-            label3.Size = new Size(236, 25);
+            label3.Size = new Size(188, 20);
             label3.TabIndex = 6;
             label3.Text = "Tabla de identificadores";
             // 
@@ -222,27 +227,29 @@
             // 
             lblMensaje.AutoSize = true;
             lblMensaje.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblMensaje.Location = new Point(12, 278);
+            lblMensaje.Location = new Point(10, 208);
             lblMensaje.Name = "lblMensaje";
-            lblMensaje.Size = new Size(105, 25);
+            lblMensaje.Size = new Size(84, 20);
             lblMensaje.TabIndex = 7;
             lblMensaje.Text = "Mensaje | ";
             // 
             // btnLeer
             // 
             btnLeer.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnLeer.Location = new Point(1070, 281);
+            btnLeer.Location = new Point(936, 211);
+            btnLeer.Margin = new Padding(3, 2, 3, 2);
             btnLeer.Name = "btnLeer";
-            btnLeer.Size = new Size(119, 35);
+            btnLeer.Size = new Size(104, 26);
             btnLeer.TabIndex = 8;
             btnLeer.Text = "Leer";
             btnLeer.UseVisualStyleBackColor = true;
+            btnLeer.Click += btnLeer_Click;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1215, 869);
+            ClientSize = new Size(1063, 652);
             Controls.Add(btnLeer);
             Controls.Add(lblMensaje);
             Controls.Add(label3);
@@ -252,6 +259,7 @@
             Controls.Add(label1);
             Controls.Add(dgvLexica);
             Controls.Add(txtTexto);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "Form1";
             Text = "Scaner";
             ((System.ComponentModel.ISupportInitialize)dgvLexica).EndInit();

@@ -62,6 +62,8 @@ namespace Scaner_Automata
         public List<RegistroLexico> RegistrosLexicos = new();
         public List<RegistroDinamico> RegistrosDinamicos = new();
         public List<RegistroConstante> RegistrosConstantes = new();
+        public List<RegistroError> Errores = new();
+        public bool huboErrores = false;
     }
 
 }

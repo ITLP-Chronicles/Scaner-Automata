@@ -119,7 +119,7 @@ namespace Scaner_Automata
                             }
                             ///El texto anterior al separador es un identificador válido
                             
-                            if (bufferIdentificador.Length != 0)
+                            else if (bufferIdentificador.Length != 0)
                             {
                                 this.AddNuevoIdentificador(bufferIdentificador.ToString(), lineaActualIndex + 1);
                             }

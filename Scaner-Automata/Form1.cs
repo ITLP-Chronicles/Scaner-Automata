@@ -8,7 +8,6 @@ namespace Scaner_Automata
         {
             InitializeComponent();
             var algo = new Automata();
-
             var another = algo.EscanearTexto(TextoDummy);
         }
     }

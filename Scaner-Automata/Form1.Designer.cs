@@ -207,7 +207,6 @@
             label2.Size = new Size(198, 25);
             label2.TabIndex = 5;
             label2.Text = "Tabla de constantes";
-            label2.Click += label2_Click;
             // 
             // label3
             // 

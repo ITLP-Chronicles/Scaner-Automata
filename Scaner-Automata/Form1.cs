@@ -11,9 +11,5 @@ namespace Scaner_Automata
             var another = algo.EscanearTexto(TextoDummy);
         }
 
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

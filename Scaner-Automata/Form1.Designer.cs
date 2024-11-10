@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             txtTexto = new TextBox();
             dgvLexica = new DataGridView();
             num = new DataGridViewTextBoxColumn();
@@ -67,6 +69,14 @@
             // 
             dgvLexica.AllowUserToAddRows = false;
             dgvLexica.AllowUserToDeleteRows = false;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dgvLexica.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvLexica.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvLexica.Columns.AddRange(new DataGridViewColumn[] { num, linea, token, tipo, codigo });
             dgvLexica.Location = new Point(10, 274);
@@ -74,6 +84,8 @@
             dgvLexica.Name = "dgvLexica";
             dgvLexica.ReadOnly = true;
             dgvLexica.RowHeadersWidth = 51;
+            dataGridViewCellStyle2.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dgvLexica.RowsDefaultCellStyle = dataGridViewCellStyle2;
             dgvLexica.Size = new Size(576, 369);
             dgvLexica.TabIndex = 1;
             // 
@@ -131,6 +143,7 @@
             // 
             dgvId.AllowUserToAddRows = false;
             dgvId.AllowUserToDeleteRows = false;
+            dgvId.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvId.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvId.Columns.AddRange(new DataGridViewColumn[] { identificadores, valorTI, lineaTI });
             dgvId.Location = new Point(624, 274);
@@ -138,6 +151,7 @@
             dgvId.Name = "dgvId";
             dgvId.ReadOnly = true;
             dgvId.RowHeadersWidth = 51;
+            dgvId.RowsDefaultCellStyle = dataGridViewCellStyle2;
             dgvId.Size = new Size(416, 165);
             dgvId.TabIndex = 3;
             // 
@@ -169,6 +183,7 @@
             // 
             dgvCons.AllowUserToAddRows = false;
             dgvCons.AllowUserToDeleteRows = false;
+            dgvCons.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvCons.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvCons.Columns.AddRange(new DataGridViewColumn[] { constantes, valorTC, lineaTC });
             dgvCons.Location = new Point(624, 478);
@@ -176,6 +191,7 @@
             dgvCons.Name = "dgvCons";
             dgvCons.ReadOnly = true;
             dgvCons.RowHeadersWidth = 51;
+            dgvCons.RowsDefaultCellStyle = dataGridViewCellStyle2;
             dgvCons.Size = new Size(416, 165);
             dgvCons.TabIndex = 4;
             // 

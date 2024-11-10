@@ -176,6 +176,10 @@ namespace Scaner_Automata
 
                                 break;
                             }
+                        case TipoChar.Desconocido: {
+
+                            }
+                            break;
                     }
                 }
             }

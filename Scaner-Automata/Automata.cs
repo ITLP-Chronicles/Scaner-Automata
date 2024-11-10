@@ -16,6 +16,9 @@ namespace Scaner_Automata
         private TipoChar tipoCharActual;
         private int estadoActual;
 
+        private StringBuilder bufferIdentificador;
+        private StringBuilder bufferConstante;
+
         // Conjuntos y diccionarios
         private (char, int) SignoDolar = ('$', 199);
         private (char, int) CadenaVacia = (' ', 99);
@@ -27,7 +30,7 @@ namespace Scaner_Automata
         };
         private Dictionary<char, int> Operadores = new Dictionary<char, int>()
         {
-            { '(', 70 },
+            { '+', 70 },
             { '-', 71 },
             {  '*', 72 },
             {  '/', 73 }
@@ -68,6 +71,8 @@ namespace Scaner_Automata
                 {5, 10, 3, 4, 5, 0, 5, 9 }
             };
             this.tipoCharActual = TipoChar.EspacioBlanco; //TipoChar por defecto
+            this.bufferConstante = new StringBuilder();
+            this.bufferIdentificador = new StringBuilder();
         }
 
         private TipoChar CategorizarCaracter(char c)
@@ -92,24 +97,28 @@ namespace Scaner_Automata
 
         public AutomataResult EscanearTexto(string allText)
         {
-            //Reiniciando el automata
+            //Reinicia el automata
             this.estadoActual = 0;
             this.valorDeDinamicos = 100;
             this.valorDeConstantes = 200;
+            this.bufferConstante.Clear();
+            this.bufferIdentificador.Clear();
+
             var toReturn = new AutomataResult();
 
             //Seteando los datos y buffers para realizar los cálculos
             string[] lines = allText.Replace(" ", "").Split('\n'); //Es necesario considerar espacios en blanco?
-            var bufferIdentificador = new StringBuilder();
-            var bufferConstante = new StringBuilder();
 
             //Realiza el análisis
             for (int actualLineIndex = 0; actualLineIndex < lines.Length; actualLineIndex ++)
             {
                 foreach(char c in lines[actualLineIndex])
                 {
+                    //Guardar valores anteriores
                     TipoChar tipoCharAnterior = tipoCharActual;
                     int estadoAnterior = estadoActual;
+
+                    //Actualizar con los nuevos valores dada la transición
                     tipoCharActual = this.CategorizarCaracter(c);
                     estadoActual = this.tablaTransiciones[estadoActual, (int)tipoCharActual];
 
@@ -125,8 +134,54 @@ namespace Scaner_Automata
                             Tipo = this.Tipos[Token.Delimitadores]
                         });
 
-                        //TODO
-                        continue;
+                        if (elEstadoEsValido(estadoAnterior))
+                        {
+                            if (bufferConstante.ToString() != String.Empty)
+                            {
+                                ///El texto anterior al separador era una constante (Número) válido
+                                toReturn.RegistrosConstantes.Add(new RegistroConstante
+                                {
+                                    ConstanteTexto = bufferConstante.ToString(),
+                                    LineaEnDondeAparece = actualLineIndex + 1,
+                                    Valor = this.valorDeConstantes++
+                                });
+
+
+                                ///Limpia como el "cache" de la palabra almacenada para dar cabida al siguiente
+                                bufferConstante.Clear();
+                            }
+                            else if (bufferIdentificador.ToString() != String.Empty)
+                            {
+                                ///El texto anterior al separador era un identificador válido
+                                ///
+                                ///Checar si no se encuentra ya este identificador
+                                RegistroDinamico? identificadorExistente =
+                                    toReturn.RegistrosDinamicos.Find(rd => rd.IdentificadorTexto == bufferIdentificador.ToString());
+
+                                //Si? Agregar solamente la línea nueva
+                                if (identificadorExistente != null)
+                                {
+                                    identificadorExistente.LineasEnDondeAparece.Add(actualLineIndex + 1);
+                                }
+                                //No? Crear un registro nuevo y la línea en la que se encuentra
+                                else
+                                {
+                                    RegistroDinamico nuevoIdentificador = new RegistroDinamico
+                                    {
+                                        IdentificadorTexto = bufferIdentificador.ToString(),
+                                        Valor = this.valorDeDinamicos++
+                                    };
+                                    nuevoIdentificador.LineasEnDondeAparece.Add(actualLineIndex + 1);
+                                    toReturn.RegistrosDinamicos.Add(nuevoIdentificador);
+                                }
+
+                                //Limpia el cache de la palabra almacenada previa
+                                bufferConstante.Clear();
+                            }
+
+                            bufferConstante.Clear();
+                            bufferIdentificador.Clear();
+                        }
                     }
 
                     if (tipoCharActual == TipoChar.Operador)
@@ -139,8 +194,55 @@ namespace Scaner_Automata
                             Tipo = this.Tipos[Token.Operadores]
                         });
 
-                        //TODO
-                        continue;
+
+                        if (elEstadoEsValido(estadoAnterior))
+                        {
+                            if (bufferConstante.ToString() != String.Empty)
+                            {
+                                ///El texto anterior al separador era una constante (Número) válido
+                                toReturn.RegistrosConstantes.Add(new RegistroConstante
+                                {
+                                    ConstanteTexto = bufferConstante.ToString(),
+                                    LineaEnDondeAparece = actualLineIndex + 1,
+                                    Valor = this.valorDeConstantes++
+                                });
+
+                                ///Limpia como el "cache" de la palabra almacenada para dar cabida al siguiente
+                                bufferConstante.Clear();
+                            }
+                            else if (bufferIdentificador.ToString() != String.Empty)
+                            {
+                                ///El texto anterior al separador era un identificador válido
+                                ///
+                                ///Checar si no se encuentra ya este identificador
+                                RegistroDinamico? identificadorExistente =
+                                    toReturn.RegistrosDinamicos.Find(rd => rd.IdentificadorTexto == bufferIdentificador.ToString());
+
+                                //Si? Agregar solamente la línea nueva
+                                if (identificadorExistente != null)
+                                {
+                                    identificadorExistente.LineasEnDondeAparece.Add(actualLineIndex + 1);
+                                }
+                                //No? Crear un registro nuevo y la línea en la que se encuentra
+                                else
+                                {
+                                    RegistroDinamico nuevoIdentificador = new RegistroDinamico
+                                    {
+                                        IdentificadorTexto = bufferIdentificador.ToString(),
+                                        Valor = this.valorDeDinamicos++
+                                    };
+                                    nuevoIdentificador.LineasEnDondeAparece.Add(actualLineIndex + 1);
+                                    toReturn.RegistrosDinamicos.Add(nuevoIdentificador);
+                                }
+
+                                //Limpia el cache de la palabra almacenada previa
+                                bufferConstante.Clear();
+                            }
+                        }
+
+                         bufferConstante.Clear();
+                         bufferIdentificador.Clear();
+
                     }
 
                   
@@ -149,7 +251,11 @@ namespace Scaner_Automata
                     if (tipoCharActual == TipoChar.Letra)
                         bufferIdentificador.Append(c);
 
-                    if (tipoCharActual == TipoChar.Digito)
+                    if (
+                            tipoCharActual == TipoChar.Digito || 
+                            tipoCharActual == TipoChar.Exponencial || 
+                            tipoCharActual == TipoChar.PuntoFlotante
+                       )
                     {
                         ///Checa si el buffer identificador tiene chars dentro
                         ///         (Significa que se está analizando un identificador actualmente)
@@ -162,10 +268,7 @@ namespace Scaner_Automata
                             bufferConstante.Append(c);
                     }
 
-                    if (tipoCharActual == TipoChar.Exponencial) { }
 
-
-                            //que mafufada estoy haciendo help
 
                 }
             }

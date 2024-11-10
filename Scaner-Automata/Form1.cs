@@ -10,7 +10,6 @@ namespace Scaner_Automata
             var algo = new Automata();
 
             var another = algo.EscanearTexto(TextoDummy);
-            var myList = another.RegistrosLexicos;
         }
     }
 }

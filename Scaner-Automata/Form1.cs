@@ -5,6 +5,10 @@ namespace Scaner_Automata
         public Form1()
         {
             InitializeComponent();
+            var algo = new Automata();
+
+            var another = algo.EscanearTexto("asdf");
+            var myList = another.RegistrosLexicos;
         }
     }
 }

@@ -10,5 +10,10 @@ namespace Scaner_Automata
             var another = algo.EscanearTexto("asdf");
             var myList = another.RegistrosLexicos;
         }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

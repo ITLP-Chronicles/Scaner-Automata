@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing.Drawing2D;
+using System.Security.Policy;
 using System.Text;
 
 namespace Scaner_Automata
@@ -41,7 +42,7 @@ namespace Scaner_Automata
                 {1, 2, 3, 4, 7, 0, 8, 6 },
                 {1, 2, 3, 4, 1, 0, 5, 6 },
                 {1, 2, 3, 4, 1, 0, 5, 6 },
-                {1, 2, 3, 4, 1, 0, 5, 6 },
+                {1, 5, 3, 4, 1, 0, 5, 6 },
                 {1, 2, 3, 4, 1, 0, 2, 6 },
                 {5, 10,3, 4, 5, 0, 5, 6 },
                 {5, 9, 3, 4, 5, 0, 5, 6 },
@@ -90,11 +91,10 @@ namespace Scaner_Automata
         }
 
 
-        //TODO: Error handling
-        public AutomataResult EscanearTexto(string allText, Label lbl)
+        public AutomataResult EscanearTexto(string allText)
         {
             this.Resetear();
-            string[] lineas = allText.Replace(" ", "").Split('\n'); 
+            string[] lineas = allText.Replace(" ", "").Split('\n');
 
             //Realiza el análisis
             for (int lineaActualIndex = 0; lineaActualIndex < lineas.Length; lineaActualIndex ++)
@@ -126,11 +126,22 @@ namespace Scaner_Automata
 
                             //No entraría en ningún if si lo anterior es un operador o delimitador.
                         }
+                        else if (estadoAnterior != 0)
+                        {
+                            string actualErrorText = bufferConstante.Length != 0 ? bufferConstante.ToString() : bufferIdentificador.ToString();
+
+                            this.results.Errores.Add(new RegistroError
+                            {
+                                CodigoError = 102,
+                                DescripcionError = "Elemento Inválido",
+                                ErrorTexto = actualErrorText,
+                                LineaEnDondeAparece = lineaActualIndex + 1
+                            }); 
+                        }
 
                         //ResetBuffers
                         this.bufferConstante.Clear();
                         this.bufferIdentificador.Clear();
-
                     }
 
 
@@ -177,17 +188,45 @@ namespace Scaner_Automata
                                 break;
                             }
                         case TipoChar.Desconocido: {
-                                this.results.huboErrores = true;
-                                lbl.Text = string.Format("Mensaje | 1:101 Error en Línea {0}: Símbolo desconocido.",  (lineaActualIndex + 1).ToString());
-                                //MessageBox.Show(string.Format("Carácter Desconocido: {0} en la Línea: {1} ", c.ToString(), (lineaActualIndex+1).ToString()));
-                                return this.results;
+                                this.results.Errores.Add(new RegistroError
+                                {
+                                    LineaEnDondeAparece = lineaActualIndex + 1,
+                                    CodigoError = 101,
+                                    DescripcionError = "Símbolo desconocido",
+                                    ErrorTexto = c.ToString()
+                                });
+                                break;
                             }
-
-                        
                     }
+                } //Aquí acaba el foreach
+
+                /// Checa si se terminó la línea actual en un estado válido (no se dejó
+                /// algo cortado, etc, entre otras validaciones al final de la línea
+                if (!elEstadoEsValido(estadoActual))
+                {
+                    string actualErrorText = bufferConstante.Length != 0 ? bufferConstante.ToString() : bufferIdentificador.ToString();
+                    this.results.Errores.Add(new RegistroError
+                    {
+                        CodigoError = 102,
+                        DescripcionError = "Elemento Inválido",
+                        ErrorTexto = actualErrorText,
+                        LineaEnDondeAparece = lineaActualIndex + 1
+                    });
+
+                    bufferConstante.Clear();
+                    bufferIdentificador.Clear();
+                }
+                else
+                {
+                    //El texto anterior es una constante válida
+                    if (bufferConstante.Length != 0)
+                        this.AddNuevoConstante(bufferConstante.ToString(), lineaActualIndex + 1);
+
+                    ///El texto anterior al separador es un identificador válido
+                    else if (bufferIdentificador.Length != 0)
+                        this.AddNuevoIdentificador(bufferIdentificador.ToString(), lineaActualIndex + 1);
                 }
             }
-
             return this.results;
         }
         
@@ -199,7 +238,6 @@ namespace Scaner_Automata
             this.bufferConstante.Clear();
             this.results = new AutomataResult();
         }
-
 
         private TipoChar CategorizarCaracter(char c)
         {

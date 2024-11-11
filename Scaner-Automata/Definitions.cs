@@ -53,6 +53,7 @@ namespace Scaner_Automata
     public record RegistroError
     {
         public int LineaEnDondeAparece;
+        public string ErrorTexto = "";
         public int CodigoError;
         public string DescripcionError = "";
     }
@@ -63,7 +64,6 @@ namespace Scaner_Automata
         public List<RegistroDinamico> RegistrosDinamicos = new();
         public List<RegistroConstante> RegistrosConstantes = new();
         public List<RegistroError> Errores = new();
-        public bool huboErrores = false;
     }
 
 }

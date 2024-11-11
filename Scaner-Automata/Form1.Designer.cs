@@ -53,10 +53,11 @@
             lblMensaje = new Label();
             btnLeer = new Button();
             dgvErrores = new DataGridView();
-            label4 = new Label();
             fase = new DataGridViewTextBoxColumn();
             codigoME = new DataGridViewTextBoxColumn();
             descripcion = new DataGridViewTextBoxColumn();
+            label4 = new Label();
+            label5 = new Label();
             ((System.ComponentModel.ISupportInitialize)dgvLexica).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvId).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvCons).BeginInit();
@@ -65,6 +66,7 @@
             // 
             // txtTexto
             // 
+            txtTexto.BackColor = SystemColors.Menu;
             txtTexto.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtTexto.Location = new Point(10, 28);
             txtTexto.Margin = new Padding(3, 2, 3, 2);
@@ -151,7 +153,7 @@
             // 
             dgvId.AllowUserToAddRows = false;
             dgvId.AllowUserToDeleteRows = false;
-            dgvId.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dgvId.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvId.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvId.Columns.AddRange(new DataGridViewColumn[] { identificadores, valorTI, lineaTI });
             dgvId.Location = new Point(624, 274);
@@ -159,7 +161,7 @@
             dgvId.Name = "dgvId";
             dgvId.ReadOnly = true;
             dgvId.RowHeadersWidth = 51;
-            dgvId.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dgvId.RowsDefaultCellStyle = dataGridViewCellStyle1;
             dgvId.Size = new Size(467, 141);
             dgvId.TabIndex = 3;
             // 
@@ -199,7 +201,8 @@
             dgvCons.Name = "dgvCons";
             dgvCons.ReadOnly = true;
             dgvCons.RowHeadersWidth = 51;
-            dgvCons.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dgvCons.RowsDefaultCellStyle = dataGridViewCellStyle3;
             dgvCons.Size = new Size(467, 151);
             dgvCons.TabIndex = 4;
             // 
@@ -273,14 +276,14 @@
             // 
             dgvErrores.AllowUserToAddRows = false;
             dgvErrores.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = SystemColors.Control;
-            dataGridViewCellStyle3.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            dgvErrores.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Control;
+            dataGridViewCellStyle4.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle4.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
+            dgvErrores.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             dgvErrores.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvErrores.Columns.AddRange(new DataGridViewColumn[] { fase, codigoME, descripcion });
             dgvErrores.Location = new Point(10, 618);
@@ -288,20 +291,9 @@
             dgvErrores.Name = "dgvErrores";
             dgvErrores.ReadOnly = true;
             dgvErrores.RowHeadersWidth = 51;
-            dataGridViewCellStyle4.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dgvErrores.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dgvErrores.RowsDefaultCellStyle = dataGridViewCellStyle3;
             dgvErrores.Size = new Size(574, 151);
             dgvErrores.TabIndex = 9;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label4.Location = new Point(10, 596);
-            label4.Name = "label4";
-            label4.Size = new Size(148, 20);
-            label4.TabIndex = 10;
-            label4.Text = "Módulo de errores";
             // 
             // fase
             // 
@@ -327,11 +319,34 @@
             descripcion.Name = "descripcion";
             descripcion.ReadOnly = true;
             // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label4.Location = new Point(10, 596);
+            label4.Name = "label4";
+            label4.Size = new Size(148, 20);
+            label4.TabIndex = 10;
+            label4.Text = "Módulo de errores";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label5.Location = new Point(725, 649);
+            label5.Name = "label5";
+            label5.Size = new Size(244, 80);
+            label5.TabIndex = 11;
+            label5.Text = "Equipo 3:\r\nKristan Ruíz Limón\r\nLuis Angel Covarrubias Tamayo\r\nTomás Aiden Mejía Ortega";
+            label5.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.GradientActiveCaption;
             ClientSize = new Size(1103, 789);
+            Controls.Add(label5);
             Controls.Add(label4);
             Controls.Add(dgvErrores);
             Controls.Add(btnLeer);
@@ -381,5 +396,6 @@
         private DataGridViewTextBoxColumn codigoME;
         private DataGridViewTextBoxColumn descripcion;
         private Label label4;
+        private Label label5;
     }
 }

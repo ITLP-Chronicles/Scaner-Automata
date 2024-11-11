@@ -94,7 +94,7 @@ namespace Scaner_Automata
         public AutomataResult EscanearTexto(string allText)
         {
             this.Resetear();
-            string[] lineas = allText.Replace(" ", "").Split('\n');
+            string[] lineas = allText.Replace(" ", "").Replace("\r", "").Split('\n');
 
             //Realiza el análisis
             for (int lineaActualIndex = 0; lineaActualIndex < lineas.Length; lineaActualIndex ++)

@@ -50,17 +50,16 @@ namespace Scaner_Automata
 
             if (hayErrores)
             {
-                lblMensaje.Text = GenerarTextoError(a.Errores[0]);
+                var el = a.Errores[0];
+                lblMensaje.Text = $"1:{el.CodigoError} Error en Línea {el.LineaEnDondeAparece}: {el.DescripcionError}";
                 foreach(RegistroError obj in a.Errores)
                     dgvErrores.Rows.Add("1", obj.CodigoError, obj.DescripcionError);
             }
             else
             {
-                lblMensaje.Text = GenerarTextoError(a.Errores[0]);
+                lblMensaje.Text = "1:100 Sin Error.";
             }
 
         }
-
-        private string GenerarTextoError(RegistroError re) => @$"1:{re.CodigoError} Error en Línea {re.LineaEnDondeAparece}: {re.DescripcionError}";
     }
 }

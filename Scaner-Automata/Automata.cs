@@ -273,7 +273,7 @@ namespace Scaner_Automata
             this.results.RegistrosLexicos.Add(new RegistroLexico
             {
                 LineaNum = noLineaEncontrado,
-                Codigo = this.valorConstanteActual++,
+                Codigo = this.valorConstanteActual,
                 Tipo = this.Tipos[Token.Constante],
                 Token = constanteText
             });
@@ -306,7 +306,7 @@ namespace Scaner_Automata
 
                 nuevoIdentificador.LineasEnDondeAparece.Add(noLineaEncontrado);
                 this.results.RegistrosDinamicos.Add(nuevoIdentificador);
-                valorDeEsteIdentificador = this.valorIdentificadorActual++;
+                valorDeEsteIdentificador = this.valorIdentificadorActual;
             }
 
             // ---------------- Lógica para añadirlo también en la tabla léxica ---------

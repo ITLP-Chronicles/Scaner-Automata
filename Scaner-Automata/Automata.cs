@@ -177,9 +177,9 @@ namespace Scaner_Automata
                                 break;
                             }
                         case TipoChar.Desconocido: {
-
+                                MessageBox.Show(string.Format("Carácter Desconocido: {0} en la Línea: {1} ", c.ToString(), (lineaActualIndex+1).ToString()));
+                                return this.results;
                             }
-                            break;
                     }
                 }
             }

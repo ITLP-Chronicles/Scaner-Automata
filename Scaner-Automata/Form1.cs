@@ -19,6 +19,8 @@ namespace Scaner_Automata
 
         private void btnLeer_Click(object sender, EventArgs e)
         {
+            lblMensaje.Text = "Mensaaje";
+            dgvErrores.Rows.Clear();
             dgvId.Rows.Clear();
             dgvCons.Rows.Clear();
             dgvLexica.Rows.Clear();
@@ -45,8 +47,20 @@ namespace Scaner_Automata
                 RegistroLexico obj = a.RegistrosLexicos[registroActualIndex];
                 dgvLexica.Rows.Add(registroActualIndex + 1, obj.LineaNum, obj.Token, obj.Tipo, obj.Codigo);
             }
+
+            if (hayErrores)
+            {
+                lblMensaje.Text = GenerarTextoError(a.Errores[0]);
+                foreach(RegistroError obj in a.Errores)
+                    dgvErrores.Rows.Add("1", obj.CodigoError, obj.DescripcionError);
+            }
+            else
+            {
+                lblMensaje.Text = GenerarTextoError(a.Errores[0]);
+            }
+
         }
 
-        private string GenerarTextoError(RegistroError re) => @$"1:{re.CodigoError} {re.DescripcionError}";
+        private string GenerarTextoError(RegistroError re) => @$"1:{re.CodigoError} Error en Línea {re.LineaEnDondeAparece}: {re.DescripcionError}";
     }
 }

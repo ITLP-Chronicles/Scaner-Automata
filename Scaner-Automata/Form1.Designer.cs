@@ -30,6 +30,8 @@
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             txtTexto = new TextBox();
             dgvLexica = new DataGridView();
             num = new DataGridViewTextBoxColumn();
@@ -50,9 +52,15 @@
             label3 = new Label();
             lblMensaje = new Label();
             btnLeer = new Button();
+            dgvErrores = new DataGridView();
+            label4 = new Label();
+            fase = new DataGridViewTextBoxColumn();
+            codigoME = new DataGridViewTextBoxColumn();
+            descripcion = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dgvLexica).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvId).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvCons).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvErrores).BeginInit();
             SuspendLayout();
             // 
             // txtTexto
@@ -62,7 +70,7 @@
             txtTexto.Margin = new Padding(3, 2, 3, 2);
             txtTexto.Multiline = true;
             txtTexto.Name = "txtTexto";
-            txtTexto.Size = new Size(1030, 180);
+            txtTexto.Size = new Size(1081, 180);
             txtTexto.TabIndex = 0;
             // 
             // dgvLexica
@@ -86,7 +94,7 @@
             dgvLexica.RowHeadersWidth = 51;
             dataGridViewCellStyle2.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             dgvLexica.RowsDefaultCellStyle = dataGridViewCellStyle2;
-            dgvLexica.Size = new Size(576, 369);
+            dgvLexica.Size = new Size(576, 310);
             dgvLexica.TabIndex = 1;
             // 
             // num
@@ -152,7 +160,7 @@
             dgvId.ReadOnly = true;
             dgvId.RowHeadersWidth = 51;
             dgvId.RowsDefaultCellStyle = dataGridViewCellStyle2;
-            dgvId.Size = new Size(416, 165);
+            dgvId.Size = new Size(467, 141);
             dgvId.TabIndex = 3;
             // 
             // identificadores
@@ -186,13 +194,13 @@
             dgvCons.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvCons.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvCons.Columns.AddRange(new DataGridViewColumn[] { constantes, valorTC, lineaTC });
-            dgvCons.Location = new Point(624, 478);
+            dgvCons.Location = new Point(624, 447);
             dgvCons.Margin = new Padding(3, 2, 3, 2);
             dgvCons.Name = "dgvCons";
             dgvCons.ReadOnly = true;
             dgvCons.RowHeadersWidth = 51;
             dgvCons.RowsDefaultCellStyle = dataGridViewCellStyle2;
-            dgvCons.Size = new Size(416, 165);
+            dgvCons.Size = new Size(467, 151);
             dgvCons.TabIndex = 4;
             // 
             // constantes
@@ -223,7 +231,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label2.Location = new Point(624, 457);
+            label2.Location = new Point(624, 426);
             label2.Name = "label2";
             label2.Size = new Size(159, 20);
             label2.TabIndex = 5;
@@ -252,7 +260,7 @@
             // btnLeer
             // 
             btnLeer.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnLeer.Location = new Point(936, 211);
+            btnLeer.Location = new Point(987, 212);
             btnLeer.Margin = new Padding(3, 2, 3, 2);
             btnLeer.Name = "btnLeer";
             btnLeer.Size = new Size(104, 26);
@@ -261,11 +269,71 @@
             btnLeer.UseVisualStyleBackColor = true;
             btnLeer.Click += btnLeer_Click;
             // 
+            // dgvErrores
+            // 
+            dgvErrores.AllowUserToAddRows = false;
+            dgvErrores.AllowUserToDeleteRows = false;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Control;
+            dataGridViewCellStyle3.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            dgvErrores.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dgvErrores.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvErrores.Columns.AddRange(new DataGridViewColumn[] { fase, codigoME, descripcion });
+            dgvErrores.Location = new Point(10, 618);
+            dgvErrores.Margin = new Padding(3, 2, 3, 2);
+            dgvErrores.Name = "dgvErrores";
+            dgvErrores.ReadOnly = true;
+            dgvErrores.RowHeadersWidth = 51;
+            dataGridViewCellStyle4.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dgvErrores.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dgvErrores.Size = new Size(574, 151);
+            dgvErrores.TabIndex = 9;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label4.Location = new Point(10, 596);
+            label4.Name = "label4";
+            label4.Size = new Size(148, 20);
+            label4.TabIndex = 10;
+            label4.Text = "Módulo de errores";
+            // 
+            // fase
+            // 
+            fase.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            fase.HeaderText = "Fase";
+            fase.MinimumWidth = 6;
+            fase.Name = "fase";
+            fase.ReadOnly = true;
+            // 
+            // codigoME
+            // 
+            codigoME.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            codigoME.HeaderText = "Código";
+            codigoME.MinimumWidth = 6;
+            codigoME.Name = "codigoME";
+            codigoME.ReadOnly = true;
+            // 
+            // descripcion
+            // 
+            descripcion.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            descripcion.HeaderText = "Descripción";
+            descripcion.MinimumWidth = 6;
+            descripcion.Name = "descripcion";
+            descripcion.ReadOnly = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1063, 652);
+            ClientSize = new Size(1103, 789);
+            Controls.Add(label4);
+            Controls.Add(dgvErrores);
             Controls.Add(btnLeer);
             Controls.Add(lblMensaje);
             Controls.Add(label3);
@@ -281,6 +349,7 @@
             ((System.ComponentModel.ISupportInitialize)dgvLexica).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvId).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvCons).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvErrores).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -307,5 +376,10 @@
         private Label label3;
         private Label lblMensaje;
         private Button btnLeer;
+        private DataGridView dgvErrores;
+        private DataGridViewTextBoxColumn fase;
+        private DataGridViewTextBoxColumn codigoME;
+        private DataGridViewTextBoxColumn descripcion;
+        private Label label4;
     }
 }

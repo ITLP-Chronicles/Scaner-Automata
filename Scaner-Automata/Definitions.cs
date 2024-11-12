@@ -26,7 +26,8 @@ namespace Scaner_Automata
         Exponencial,
         EspacioBlanco,
         PuntoFlotante,
-        Desconocido
+        Desconocido,
+        SignoDolarToken
     }
 
     public record RegistroLexico

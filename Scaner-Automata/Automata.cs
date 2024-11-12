@@ -105,10 +105,11 @@ namespace Scaner_Automata
                     int estadoAnterior = estadoActual;
 
                     tipoCharActual = this.CategorizarCaracter(c);
-                    estadoActual = this.tablaTransiciones[estadoActual, (int)tipoCharActual];
+                    int nextTransition = tipoCharActual == TipoChar.SignoDolarToken ? (int)TipoChar.Delimitador : (int)tipoCharActual;
+                    estadoActual = this.tablaTransiciones[estadoActual, nextTransition];
 
                     /// TiposChars (Separación): Lógica de separación de tokens usando delimitadores y operadores
-                    if (tipoCharActual == TipoChar.Delimitador || tipoCharActual == TipoChar.Operador)
+                    if (tipoCharActual == TipoChar.Delimitador || tipoCharActual == TipoChar.Operador || tipoCharActual == TipoChar.SignoDolarToken) 
                     {
                         if (elEstadoEsValido(estadoAnterior))
                         {
@@ -168,10 +169,22 @@ namespace Scaner_Automata
                                 });
                                 break;
                             }
+                        case TipoChar.SignoDolarToken:
+                            {
+                                this.results.RegistrosLexicos.Add(new RegistroLexico
+                                {
+                                    LineaNum = lineaActualIndex + 1,
+                                    Codigo = this.SignoDolar.Item2,
+                                    Token = c.ToString(),
+                                    Tipo = this.Tipos[Token.SignoDolar]
+                                });
+                                break;
+                            }
                         case TipoChar.Letra: {
                                 bufferIdentificador.Append(c);
                                 break;
                             }
+
                         case TipoChar.Digito:
                         case TipoChar.Exponencial:
                         case TipoChar.PuntoFlotante: {
@@ -241,6 +254,7 @@ namespace Scaner_Automata
 
         private TipoChar CategorizarCaracter(char c)
         {
+            if (c == '$') return TipoChar.SignoDolarToken;
             if (c == '(' || c == ')' || c == ';') return TipoChar.Delimitador;
             if (c == '+' || c == '-' || c == '*' || c == '/') return TipoChar.Operador;
             if (c == '.') return TipoChar.PuntoFlotante;

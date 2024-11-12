@@ -225,6 +225,9 @@ namespace Scaner_Automata
                     ///El texto anterior al separador es un identificador válido
                     else if (bufferIdentificador.Length != 0)
                         this.AddNuevoIdentificador(bufferIdentificador.ToString(), lineaActualIndex + 1);
+
+                    bufferConstante.Clear();
+                    bufferIdentificador.Clear();
                 }
             }
             return this.results;
@@ -266,8 +269,9 @@ namespace Scaner_Automata
             {
                 ConstanteTexto = constanteText,
                 LineaEnDondeAparece = noLineaEncontrado,
-                Valor = this.valorConstanteActual++
+                Valor = this.valorConstanteActual
             });
+
 
             //Toca añadirlo a la tabla léxica en general también
             this.results.RegistrosLexicos.Add(new RegistroLexico
@@ -277,6 +281,8 @@ namespace Scaner_Automata
                 Tipo = this.Tipos[Token.Constante],
                 Token = constanteText
             });
+
+            this.valorConstanteActual += 1;
         }
 
         private void AddNuevoIdentificador(string identificadorText, int noLineaEncontrado)
@@ -301,12 +307,13 @@ namespace Scaner_Automata
                 var nuevoIdentificador = new RegistroDinamico
                 {
                     IdentificadorTexto = identificadorText,
-                    Valor = this.valorIdentificadorActual++
+                    Valor = this.valorIdentificadorActual
                 };
 
+                valorDeEsteIdentificador = this.valorIdentificadorActual;
+                this.valorIdentificadorActual += 1;
                 nuevoIdentificador.LineasEnDondeAparece.Add(noLineaEncontrado);
                 this.results.RegistrosDinamicos.Add(nuevoIdentificador);
-                valorDeEsteIdentificador = this.valorIdentificadorActual;
             }
 
             // ---------------- Lógica para añadirlo también en la tabla léxica ---------

@@ -7,13 +7,12 @@ namespace Scaner_Automata
     {
         private const string TextoPorDefecto = "(X1+B2);\r\n(Y1+B3*C4)+D;\r\n(((VAR2+X1)));\r\n(PESO+(CARGO*DIF2));\r\n((X2+45e78) * (CARGO/ABONO) - (PORC*12.55)) - INT;\r\n456.78* (12.34*3.56E45) +B2;";
 
-        Automata automata;
+        LexicAutomata automata;
 
         public Form1()
         {
             InitializeComponent();
             this.automata = new();
-
             txtTexto.Text = TextoPorDefecto;
         }
 
@@ -45,7 +44,7 @@ namespace Scaner_Automata
             for (int registroActualIndex = 0; registroActualIndex < a.RegistrosLexicos.Count; registroActualIndex++)
             {
                 RegistroLexico obj = a.RegistrosLexicos[registroActualIndex];
-                dgvLexica.Rows.Add(registroActualIndex + 1, obj.LineaNum, obj.Token, obj.Tipo, obj.Codigo);
+                dgvLexica.Rows.Add(registroActualIndex + 1, obj.LineaNum, obj.TokenText, obj.Tipo, obj.Codigo);
             }
 
             if (hayErrores)

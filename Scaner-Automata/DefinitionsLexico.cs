@@ -32,9 +32,11 @@ namespace Scaner_Automata
     public record RegistroLexico
     {
         public int LineaNum;
-        public string Token = "";
+        public string TokenText = "";
+        public Token tokenType;
         public int Tipo;
         public int Codigo;
+        public int LineaEnDondeAparece;
     }
 
     public record RegistroDinamico

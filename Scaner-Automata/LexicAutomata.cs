@@ -7,7 +7,7 @@ using System.Text;
 namespace Scaner_Automata
 {
   
-    internal class Automata
+    internal class LexicAutomata
     {
         private readonly int[,] tablaTransiciones;
 
@@ -33,7 +33,7 @@ namespace Scaner_Automata
         private readonly Dictionary<int, string> ErroresDisponibles;
         private readonly Dictionary<Token, int> Tipos;
 
-        public Automata()
+        public LexicAutomata()
         {
            this.tablaTransiciones = new int[,]
             {
@@ -94,7 +94,7 @@ namespace Scaner_Automata
         public AutomataResult EscanearTexto(string allText)
         {
             this.Resetear();
-            string[] lineas = allText.Replace(" ", "").Replace("\r", "").Split('\n');
+            string[] lineas = allText.Replace("\r", "").Split('\n');
 
             //Realiza el análisis
             for (int lineaActualIndex = 0; lineaActualIndex < lineas.Length; lineaActualIndex ++)
@@ -108,7 +108,7 @@ namespace Scaner_Automata
                     estadoActual = this.tablaTransiciones[estadoActual, (int)tipoCharActual];
 
                     /// TiposChars (Separación): Lógica de separación de tokens usando delimitadores y operadores
-                    if (tipoCharActual == TipoChar.Delimitador || tipoCharActual == TipoChar.Operador)
+                    if (tipoCharActual == TipoChar.Delimitador || tipoCharActual == TipoChar.Operador || tipoCharActual == TipoChar.EspacioBlanco)
                     {
                         if (elEstadoEsValido(estadoAnterior))
                         {
@@ -153,8 +153,10 @@ namespace Scaner_Automata
                                 {
                                     LineaNum = lineaActualIndex + 1,
                                     Codigo = this.Delimitadores[c],
-                                    Token = c.ToString(),
-                                    Tipo = this.Tipos[Token.Delimitadores]
+                                    TokenText = c.ToString(),
+                                    Tipo = this.Tipos[Token.Delimitadores],
+                                    LineaEnDondeAparece = lineaActualIndex + 1,
+                                    tokenType = Token.Delimitadores
                                 });
                                 break;
                             }
@@ -163,8 +165,10 @@ namespace Scaner_Automata
                                 {
                                     LineaNum = lineaActualIndex + 1,
                                     Codigo = this.Operadores[c],
-                                    Token = c.ToString(),
-                                    Tipo = this.Tipos[Token.Operadores]
+                                    TokenText = c.ToString(),
+                                    Tipo = this.Tipos[Token.Operadores] ,
+                                    LineaEnDondeAparece = lineaActualIndex + 1,
+                                    tokenType = Token.Operadores
                                 });
                                 break;
                             }
@@ -279,7 +283,9 @@ namespace Scaner_Automata
                 LineaNum = noLineaEncontrado,
                 Codigo = this.valorConstanteActual,
                 Tipo = this.Tipos[Token.Constante],
-                Token = constanteText
+                TokenText = constanteText,
+                LineaEnDondeAparece = noLineaEncontrado,
+                tokenType = Token.Constante
             });
 
             this.valorConstanteActual += 1;
@@ -323,7 +329,9 @@ namespace Scaner_Automata
                     LineaNum = noLineaEncontrado,
                     Codigo = valorDeEsteIdentificador,
                     Tipo = this.Tipos[Token.Identificador],
-                    Token = identificadorText
+                    TokenText = identificadorText,
+                    LineaEnDondeAparece = noLineaEncontrado,
+                    tokenType = Token.Identificador
                 }
             );
         }
